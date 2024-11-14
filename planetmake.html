@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planet Maker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #e0f7fa;
+            padding: 20px;
+        }
+        #planet {
+            margin-top: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Make Your Own Planet</h1>
+    <input type="color" id="colorPicker" value="#3498db"> Color of your planet<br>
+    <input type="number" id="diameterInput" placeholder="Diameter (px)" min="20"> <br>
+    <label for="ringsCheckbox">Rings?</label>
+    <input id="ringsCheckbox" type="checkbox"><br>
+    <button id="createPlanetButton">Create Planet</button>
+
+    <div id="planet"></div>
+
+    <script>
+        document.getElementById('createPlanetButton').addEventListener('click', function() {
+            const color = document.getElementById('colorPicker').value;
+            const diameter = document.getElementById('diameterInput').value;
+            const hasRings = document.getElementById('ringsCheckbox').checked;
+
+            const planetDiv = document.getElementById('planet');
+            planetDiv.style.backgroundColor = color;
+            planetDiv.style.width = diameter + 'px';
+            planetDiv.style.height = diameter + 'px';
+            planetDiv.style.border = hasRings ? '10px solid gold' : 'none'; 
+            planetDiv.style.borderRadius = '50%';
+        });
+    </script>
+</body>
+</html>

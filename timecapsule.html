@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Time Capsule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 300px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        input[type="date"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .capsule {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Digital Time Capsule</h1>
+    <textarea id="message" placeholder="Write a message for the future..."></textarea><br>
+    <input type="date" id="releaseDate"><br>
+    <button id="saveButton">Save to Time Capsule</button>
+
+    <div class="capsule" id="capsuleContainer">
+        <h2>Your Messages:</h2>
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        const saveButton = document.getElementById('saveButton');
+        const messageInput = document.getElementById('message');
+        const releaseDateInput = document.getElementById('releaseDate');
+        const messagesContainer = document.getElementById('messages');
+
+        function createSQLFile() {
+            const sqlContent = `
+            -- Controleer of de database bestaat en maak deze aan als deze niet bestaat
+            CREATE DATABASE IF NOT EXISTS timecapsule;
+
+            -- Gebruik de database
+            USE timecapsule;
+
+            -- Maak een tabel aan voor de tijdcapsule berichten
+            CREATE TABLE IF NOT EXISTS messages (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                text TEXT NOT NULL,
+                release_date DATE NOT NULL
+            );
+            `;
+
+            const blob = new Blob([sqlContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'timecapulewebsite.sql';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function loadMessages() {
+            const messages = JSON.parse(localStorage.getItem('timeCapsuleMessages')) || [];
+            messages.forEach(msg => {
+                checkAndDisplayMessage(msg);
+            });
+        }
+
+        function checkAndDisplayMessage(msg) {
+            const currentDate = new Date();
+            const releaseDate = new Date(msg.releaseDate);
+            if (currentDate >= releaseDate) {
+                addMessageToDOM(msg.text);
+            }
+        }
+
+        function addMessageToDOM(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.innerHTML = `<p>${text}</p>`;
+            messagesContainer.appendChild(messageDiv);
+        }
+
+        saveButton.addEventListener('click', () => {
+            const messageText = messageInput.value;
+            const releaseDate = releaseDateInput.value;
+
+            if (messageText && releaseDate) {
+                const messages = JSON.parse(localStorage.getItem('timeCapsuleMessages')) || [];
+                messages.push({ text: messageText, releaseDate: releaseDate });
+                localStorage.setItem('timeCapsuleMessages', JSON.stringify(messages));
+                messageInput.value = '';
+                releaseDateInput.value = '';
+                checkAndDisplayMessage({ text: messageText, releaseDate: releaseDate });
+
+                createSQLFile();
+            } else {
+                alert('Please enter a message and select a release date.');
+            }
+        });
+
+        loadMessages(); 
+    </script>
+</body>
+</html>

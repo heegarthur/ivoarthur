@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            transition: background-color 0.5s; /* Voor een vloeiende overgang van kleuren */
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        input[type="button"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .mood-display {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .history {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 300px; /* Limiteer de hoogte van de geschiedenis */
+            overflow-y: auto; /* Maak het scrollbaar */
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .month {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Moodboard</h1>
+        <div>Vandaag</div>
+        
+        <select id="mood_today" name="keuze">
+            <option value="sad">Sad</option>
+            <option value="angry">Angry</option>
+            <option value="bored">Bored</option>
+            <option value="tired">Tired</option>
+            <option value="normal... yk">Normal... yk</option>
+            <option value="good">Good</option>
+            <option value="happy">Happy</option>
+            <option value="my day!!!">Today was MY day!!!</option>
+        </select>
+        <br>
+        <input type="button" value="Verstuur" id="submitBtn">
+        
+        <div class="mood-display" id="moodDisplay"></div>
+        <div class="history" id="history"></div>
+    </div>
+
+    <script>
+        const selectElement = document.getElementById('mood_today');
+        const submitButton = document.getElementById('submitBtn');
+        const moodDisplay = document.getElementById('moodDisplay');
+        const historyDisplay = document.getElementById('history');
+    
+        // Functie om de opgeslagen stemming weer te geven
+        function displayMood() {
+            const today = new Date().toISOString().split('T')[0]; // Huidige datum in YYYY-MM-DD formaat
+            const savedMood = localStorage.getItem(today);
+            if (savedMood) {
+                moodDisplay.textContent = `Je stemming voor vandaag is: ${savedMood}`;
+                changeBackgroundColor(savedMood); // Verander de achtergrondkleur op basis van de stemming
+            } else {
+                moodDisplay.textContent = 'Geen stemming opgeslagen voor vandaag.';
+                changeBackgroundColor(''); // Reset de achtergrondkleur
+            }
+            displayHistory(); // Toon de geschiedenis van stemmingen
+        }
+
+        // Functie om de achtergrondkleur te veranderen op basis van de stemming
+        function changeBackgroundColor(mood) {
+            switch (mood) {
+                case 'sad':
+                    document.body.style.backgroundColor = 'red';
+                    break;
+                case 'angry':
+                    document.body.style.backgroundColor = 'darkred';
+                    break;
+                case 'bored':
+                    document.body.style.backgroundColor = 'gray';
+                    break;
+                case 'tired':
+                    document.body.style.backgroundColor = 'lightblue';
+                    break;
+                case 'normal... yk':
+                    document.body.style.backgroundColor = 'white';
+                    break;
+                case 'good':
+                    document.body.style.backgroundColor = 'yellow';
+                    break;
+                case 'happy':
+                    document.body.style.backgroundColor = 'lightgreen';
+                    break;
+                case 'my day!!!':
+                    document.body.style.backgroundColor = 'orange';
+                    break;
+                default:
+                    document.body.style.backgroundColor = '#f0f0f0'; // Standaard achtergrondkleur
+                    break;
+            }
+        }
+    
+        // Functie om de geschiedenis van stemmingen weer te geven
+        function displayHistory() {
+            historyDisplay.innerHTML = ''; // Maak de geschiedenis leeg
+            const moodsByMonth = {}; // Object om stemmingen per maand op te slaan
+            
+    
+            // Loop door localStorage om stemmingen te groeperen per maand
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                const date = new Date(key);
+    
+                // Controleer of de datum geldig is
+                if (isNaN(date)) {
+                    console.error(`Invalid Date for key: ${key}`);
+                    continue; // Sla deze iteratie over als de datum ongeldig is
+                }
+    
+                const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+                if (!moodsByMonth[monthYear]) {
+                    moodsByMonth[monthYear] = [];
+                }
+                moodsByMonth[monthYear].push(`${key}: ${value}`);
+            }
+    
+            // Loop door de maanden en voeg ze toe aan de geschiedenisweergave
+            for (const month in moodsByMonth) {
+                historyDisplay.innerHTML += `<div class="month">${month}</div>`;
+                moodsByMonth[month].forEach(mood => {
+                    historyDisplay.innerHTML += `<p>${mood}</p>`;
+                });
+            }
+        }
+    
+        // Event listener voor de verzendknop
+        submitButton.addEventListener('click', () => {
+            const today = new Date().toISOString().split('T')[0]; // Huidige datum in YYYY-MM-DD formaat
+            const selectedMood = selectElement.value;
+            localStorage.setItem(today, selectedMood); // Sla de stemming op in localStorage
+            displayMood(); // Update de weergave
+        });
+    
+        // Toon de stemming en geschiedenis bij het laden van de pagina
+        window.onload = displayMood;
+    </script>
+</body>
+</html>

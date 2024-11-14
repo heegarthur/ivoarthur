@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wait a sec to load...</title>
+</head>
+<body>
+    <smth id="smth">wait until the loading process is done</smth><br>
+    <div id="points">0</div><br>
+    <div id="loader">loading</div>
+
+    <script>
+        let points = parseInt(localStorage.getItem('points')) || 0;
+        if (points === 0) points = 1;
+        document.getElementById('points').innerText = points;
+
+        setInterval(() => {
+            points++;
+            localStorage.setItem('points', points);
+            document.getElementById('points').innerText = points;
+        }, 1000);
+    </script>
+    <style>
+        body{
+            text-align: center;
+            display: flex;
+            height: auto;
+
+        }
+        #smth{
+            width: 100px;
+            height: 100px;
+        }
+        #points{
+            width: 100px;
+            height: 100px;
+        }
+        #loader{
+            width: 100px;
+            height: 100px;
+            border: 15px solid #7c0d0d;
+            border-top: 15px solid #13099e;
+            border-bottom: #13099e;
+            border-radius: 50%;
+            width: 50px;
+            height: 60px;
+            animation: load 30s infinite;
+
+        }
+        @keyframes load {
+        0% {
+            background-color: #7c0d0d;
+            transform: scale(1.1);
+            opacity: 0.8;
+    }
+        25% {
+            background-color: #13099e;
+            transform: scale(0.9);
+            opacity: 1;
+    }
+        50% {
+            background-color: #7c0d0d;
+            transform: scale(1.1);
+            opacity: 0.8;
+    }
+        75% {
+            background-color: #13099e;
+            transform: scale(0.9);
+            opacity: 1;
+    }
+        100% {
+            background-color: #7c0d0d;
+            transform: scale(1.1);
+            opacity: 0.8;
+    }
+}
+    </style>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sand Box</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0e68c; /* Light sand color */
+            color: #333;
+            text-align: center;
+        }
+        .canvas {
+            border: 1px solid #333;
+            cursor: crosshair;
+        }
+        .color-palette, .controls {
+            margin: 10px 0;
+        }
+        .color-box {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+        .brush-size {
+            margin: 0 5px;
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sand Box</h1>
+    <div class="controls">
+        <button id="eraser">Eraser</button>
+        <button id="clear">Clear Canvas</button>
+        <label for="brushSize">Brush Size:</label>
+        <select id="brushSize" class="brush-size">
+            <option value="5">Small</option>
+            <option value="10">Medium</option>
+            <option value="15">Large</option>
+        </select>
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+        <button id="save">Save</button>
+    </div>
+    <div class="color-palette">
+        <div class="color-box" style="background-color: #d2b48c;" data-color="#d2b48c"></div> <!-- Tan -->
+        <div class="color-box" style="background-color: #c2b280;" data-color="#c2b280"></div> <!-- Light Sand -->
+        <div class="color-box" style="background-color: #e4c19c;" data-color="#e4c19c"></div> <!-- Sandy Brown -->
+        <div class="color-box" style="background-color: #b8860b;" data-color="#b8860b"></div> <!-- Dark Goldenrod -->
+        <div class="color-box" style="background-color: #f4a460;" data-color="#f4a460"></div> <!-- Sandy -->
+    </div>
+    <canvas id="sandBox" width="800" height="600" class="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('sandBox');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let lastX, lastY;
+        let currentColor = '#964B00'; // Default color
+        let brushSize = 5; // Default brush size
+        let history = []; // Undo/Redo history
+        let historyIndex = -1; // Current index in history
+
+        // Color selection
+        const colorBoxes = document.querySelectorAll('.color-box');
+        colorBoxes.forEach(box => {
+            box.addEventListener('click', () => {
+                currentColor = box.getAttribute('data-color');
+            });
+        });
+
+        // Brush size selection
+        const brushSizeSelector = document.getElementById('brushSize');
+        brushSizeSelector.addEventListener('change', (e) => {
+            brushSize = parseInt(e.target.value);
+        });
+
+        // Eraser functionality
+        const eraserButton = document.getElementById('eraser');
+        eraserButton.addEventListener('click', () => {
+            currentColor = '#f0e68c'; // Set eraser color to match background
+        });
+
+        // Clear canvas functionality
+        const clearButton = document.getElementById('clear');
+        clearButton.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            history = [];
+            historyIndex = -1;
+        });
+
+        // Undo functionality
+        const undoButton = document.getElementById('undo');
+        undoButton.addEventListener('click', () => {
+            if (historyIndex > 0) {
+                historyIndex--;
+                ctx.putImageData(history[historyIndex], 0, 0);
+            }
+        });
+
+        // Redo functionality
+        const redoButton = document.getElementById('redo');
+        redoButton.addEventListener('click', () => {
+            if (historyIndex < history.length -  1) {
+                historyIndex++;
+                ctx.putImageData(history[historyIndex], 0, 0);
+            }
+        });
+
+        // Save functionality
+        const saveButton = document.getElementById('save');
+        saveButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'sand_drawing.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+
+        // Drawing functionality
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            lastX = e.offsetX;
+            lastY = e.offsetY;
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (drawing) {
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = brushSize;
+                ctx.stroke();
+                lastX = e.offsetX;
+                lastY = e.offsetY;
+                historyIndex++;
+                history[historyIndex] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            drawing = false;
+        });
+    </script>
+</body>
+</html>

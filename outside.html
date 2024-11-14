@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Outside Activities</title>
+    <style>
+        .activity {
+            display: none; /* Verberg alle activiteiten standaard */
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div>Things to do outside</div><br>
+    <form id="outside-form">
+        <select id="season">
+            <option value="summer">Summer</option>
+            <option value="spring">Spring</option>
+            <option value="autumn">Autumn</option>
+            <option value="winter">Winter</option>
+        </select>
+        <input id="people" type="number" placeholder="How many people" min="1" required>
+        <select id="activity-level">
+            <option value="I don't care">IDC</option>
+            <option value="lazy">Lazy</option>
+            <option value="active">Active</option>
+        </select> 
+        <input id="submit" type="submit" value="Submit">
+    </form>
+    
+    <button id="show-all">Show All</button>
+
+    <div id="activities">
+        <div class="activity" data-season="summer" data-people="1" data-level="lazy">
+            just sitting<br>
+            read<br>
+            go for a stroll<br> 
+            go to a place to take a picture<br>
+            cycle in random directions<br>
+            cycle to a place that you have never been before<br>
+            go to places where you haven't been for a long time<br>
+            walk until you know what to do<br>
+        </div>
+        <div class="activity" data-season="summer" data-people="2" data-level="active">
+            swim<br>
+            cycle<br>
+            run<br>
+
+        </div>
+        <div class="activity" data-season="summer" data-people="moreThan2" data-level="lazy"></div>
+
+        <div class="activity" data-season="winter" data-people="1" data-level="active"></div>
+        <div class="activity" data-season="winter" data-people="2" data-level="lazy"></div>
+        <div class="activity" data-season="winter" data-people="moreThan2" data-level="active"></div>
+
+        <div class="activity" data-season="spring" data-people="1" data-level="lazy"></div>
+        <div class="activity" data-season="spring" data-people="moreThan2" data-level="active"></div>
+
+        <div class="activity" data-season="autumn" data-people="2" data-level="active"></div>
+        <div class="activity" data-season="autumn" data-people="moreThan2" data-level="lazy"></div>
+    </div>
+
+    <script>
+        document.getElementById("outside-form").addEventListener('submit', function(event){
+            event.preventDefault();
+            const people = document.getElementById('people').value;
+            const season = document.getElementById("season").value;
+            const activityLevel = document.getElementById("activity-level").value;
+
+            // Verberg alle activiteiten eerst
+            const activities = document.querySelectorAll('.activity');
+            activities.forEach(activity => {
+                activity.style.display = 'none'; // Verberg de activiteit
+            });
+
+            // Toon de relevante activiteiten
+            activities.forEach(activity => {
+                const hasCorrectSeason = activity.getAttribute('data-season') === season;
+                const hasCorrectLevel = activityLevel === "I don't care" || activity.getAttribute('data-level') === activityLevel;
+
+                // Controleer het aantal mensen
+                let hasCorrectPeople = false;
+                if (people == 1) {
+                    hasCorrectPeople = activity.getAttribute('data-people') === '1';
+                } else if (people == 2) {
+                    hasCorrectPeople = activity.getAttribute('data-people') === '2';
+                } else if (people > 2) {
+                    hasCorrectPeople = activity.getAttribute('data-people') === 'moreThan2';
+                }
+
+                // Als de activiteit aan alle criteria voldoet, toon deze
+                if (hasCorrectSeason && hasCorrectLevel && hasCorrectPeople) {
+                    activity.style.display = 'block'; // Toon de activiteit
+                }
+ });
+        });
+
+        document.getElementById("show-all").addEventListener('click', function() {
+            const activities = document.querySelectorAll('.activity');
+            activities.forEach(activity => {
+                activity.style.display = 'block'; // Toon alle activiteiten
+            });
+        });
+    </script>
+</body>
+</html>

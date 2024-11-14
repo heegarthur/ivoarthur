@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>typebits decoder</title>
+    <script>
+        function decodeText() {
+            const decoderTextVal = {
+                '0-': 'a',
+                '1-': 'b',
+                '00-': 'c',
+                '01-': 'd',
+                '11-': 'e',
+                '000-': 'f',
+                '001-': 'g',
+                '010-': 'h',
+                '011-': 'i',
+                '100-': 'j',
+                '101-': 'k',
+                '110-': 'l',
+                '111-': 'm',
+                '0000-': 'n',
+                '0001-': 'o',
+                '0010-': 'p',
+                '0011-': 'q',
+                '0100-': 'r',
+                '0101-': 's',
+                '0110-': 't',
+                '0111-': 'u',
+                '1000-': 'v',
+                '1001-': 'w',
+                '1010-': 'x',
+                '1011-': 'y',
+                '1100-': 'z',
+            };
+
+            const fullInput = document.getElementById("inputText").value;
+            const words = fullInput.split(' ');
+            let decodedText = "";
+
+            for (let word of words) {
+                const codedCharacters = word.split('-');
+                for (let codedChar of codedCharacters) {
+                    if (codedChar) {
+                        codedChar += '-';
+                        if (decoderTextVal[codedChar]) {
+                            decodedText += decoderTextVal[codedChar];
+                        } else {
+                            decodedText += '?';
+                        }
+                    }
+                }
+                decodedText += ' ';
+            }
+
+            document.getElementById("outputText").innerText = `Decoded text: ${decodedText.trim()}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Decoder</h1>
+    <label for="inputText">you: </label><br>
+    <input type="text" id="inputText"><br><br>
+    <button onclick="decodeText()">decode</button>
+    <h2 id="outputText"></h2>
+</body>
+</html>

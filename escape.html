@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escape</title>
+</head>
+<body>
+    <div id="chossetext">Choose the right door</div>
+    <button onclick="leftrightclicked('left')" id="left" class="rl">Left</button>
+    <button onclick="leftrightclicked('right')" id="right" class="rl">Right</button>
+    <div id="highscoreshow">Highscore: 0</div>
+    <div id="scoreShow">Huidige score: 0</div>
+
+    <script>
+        let score = 0; 
+        let currentPass = 1;
+        const passes = {
+            1: "left", 2: "right", 3: "left", 4: "right", 5: "left",
+            6: "right", 7: "left", 8: "right", 9: "left", 10: "right",
+            11: "left", 12: "right", 13: "left", 14: "right", 15: "left",
+            16: "right", 17: "left", 18: "right", 19: "left", 20: "right", 
+            21: "left", 22: "right", 23: "left", 24: "right", 25: "left",
+            26: "right", 27: "left", 28: "right", 29: "left", 30: "right",
+            31: "left", 32: "right", 33: "left", 34: "right", 35: "left",
+            36: "right", 37: "left", 38: "right", 39: "left", 40: "right",
+            41: "left", 42: "right", 43: "left", 44: "right", 45: "left",
+            46: "right", 47: "left", 48: "right", 49: "left", 50: "right",
+            51: "left", 52: "right", 53: "left", 54: "right", 55: "left",
+            56: "right", 57: "left", 58: "right", 59: "left", 60: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left", 
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            66: "right", 67: "left", 68: "right", 69: "left", 70: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            71: "left", 72: "right", 73: "left", 74: "right", 75: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            76: "right", 77: "left", 78: "right", 79: "left", 80: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            81: "left", 82: "right", 83: "left", 84: "right", 85: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            86: "right", 87: "left", 88: "right", 89: "left", 90: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            91: "left", 92: "right", 93: "left", 94: "right", 95: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            96: "right", 97: "left", 98: "right", 99: "left", 100: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            101: "left", 102: "right", 103: "left", 104: "right", 105: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            106: "right", 107: "left", 108: "right", 109: "left", 110: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            111: "left", 112: "right", 113: "left", 114: "right", 115: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            116: "right", 117: "left", 118: "right", 119: "left", 120: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            121: "left", 122: "right", 123: "left", 124: "right", 125: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            126: "right", 127: "left", 128: "right", 129: "left", 130: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            131: "left", 132: "right", 133: "left", 134: "right", 135: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            136: "right", 137: "left", 138: "right", 139: "left", 140: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            141: "left", 142: "right", 143: "left", 144: "right", 145: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            146: "right", 147: "left", 148: "right", 149: "left", 150: "right",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            151: "left", 152: "right", 153: "left", 154: "right", 155: "left",
+            61: "left", 62: "right", 63: "left", 64: "right", 65: "left",
+            156: "right", 157: "left", 158: "right", 159: "left", 160:"left"}
+
+
+
+
+        function checkHighscore() {
+            let highscore = localStorage.getItem('highscore');
+            if (highscore === null) {
+                highscore = 0;
+            } else {
+                highscore = parseInt(highscore);
+            }
+
+            if (score > highscore) {
+                localStorage.setItem('highscore', score);
+                highscore = score;
+            }
+
+            document.getElementById('highscoreshow').innerText = 'Highscore: ' + highscore;
+        }
+
+        function leftrightclicked(choice) {
+            if (currentPass <= Object.keys(passes).length) {
+                if (choice === passes[currentPass]) {
+                    score++;
+                    document.getElementById('scoreShow').innerText = 'Huidige score: ' + score;
+                    currentPass++;
+                    checkHighscore();
+                } else {
+                    alert('Game Over!.');
+                    resetGame();
+                }
+            } else {
+                alert('hacker');
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            score = 0;
+            currentPass = 1;
+            document.getElementById('scoreShow').innerText = 'score: ' + score;
+            checkHighscore();
+        }
+
+        window.onload = function() {
+            checkHighscore();
+        }
+    </script>
+    <style>
+        body {
+            align-items: center;
+        }
+        #chossetext{
+            font-size: 50px;
+            position: absolute;
+            top: 50px;
+            left: 600px;
+        }
+
+        @keyframes rlan{
+            0%{
+                border-width: 10px;
+                border-color: black;
+                color: black;
+                background-color: azure;
+            }
+            50%{
+                border-width: 20px;
+                border-color: yellow;
+                color: aqua;
+                background-color: yellow;
+            }
+            100%{
+                border-width: 10px;
+                border-color: black;
+                color: black;
+                background-color: azure;
+            }
+        }
+
+        .rl{
+            border-radius: 10px;
+            border-width: 10px;
+            border-color: black;
+            color: black;
+            background-color: azure;
+            
+        }
+        .rl:hover{
+            animation: rlan 1s infinite;
+            
+        }
+
+
+        
+        
+    </style>
+</body>
+</html>

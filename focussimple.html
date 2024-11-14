@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            simple focus
+        </title>
+    </head>
+    <body>
+        <style>
+            shows{
+                font-size: large;
+                transition: color 1s;
+                transition: background-color 1s ease;
+                box-shadow: 0 2px 4px #00000005;
+                transition: transform 1s;
+
+                
+            }
+            shows:hover{
+                background: linear-gradient(90deg, #0a06ff, #51ce08);
+                border-radius: 5px;
+                transform: scale(1.5);
+                overflow: hidden;
+            }
+            #focustext{
+                font: italic;
+            }
+
+        </style>
+        <div id="counter" >-</div><br><br>
+        
+        <div id="focustext"> focus, because this is how fast time goes</div>
+        <br>
+        <shows id="steps"></shows><br>
+        <shows id="fiets"></shows><br>
+        <shows id="water"></shows><br>
+        <shows id="typen"></shows><br>
+        <shows id="gedachten"></shows><br>
+        <shows id="maan"></shows><br>
+        <shows id="doden"></shows><br>
+        
+        <script>
+            
+
+
+
+            let counter = localStorage.getItem("counter");
+            const elements = document.querySelectorAll('shows');
+            let index = 0;
+            if (counter == null){
+                localStorage.setItem("counter",1)
+            }
+
+            
+            setInterval(function verhoog(counthoeveelheid){
+                counthoeveelheid = parseInt(localStorage.getItem("counter"));
+                counthoeveelheid++;
+                localStorage.setItem("counter", counthoeveelheid);
+                document.getElementById("counter").innerHTML = counthoeveelheid+" sec";
+            }, 1000)
+            
+            setInterval(function (bereken){
+                let counter = localStorage.getItem("counter");
+                document.getElementById("steps").innerText = "you could have taken "+Math.floor(counter*2)+" steps, which is "+Math.floor(counter*1.7)+" meters";
+                document.getElementById("fiets").innerText = "you could cycle "+Math.floor(counter*4.17)+" meters";
+                document.getElementById("water").innerText = "You would now have drunk "+Math.floor(counter*0.000035)+" liter(s) water";
+                document.getElementById("typen").innerText = "You could type "+Math.floor(counter*4)+" letters";
+                document.getElementById("gedachten").innerText = "Now you would actually have had around "+Math.floor(counter*0.81)+" thoughts"
+                document.getElementById("maan").innerText = "The moon has moved "+(counter*0.0000001205).toFixed(12)+" cm";
+                document.getElementById("doden").innerText = "In this time "+Math.floor(counter*1.9)+" people died";
+            }, 1000)
+
+            function highlight(){
+                
+                if (index > 0){
+                    elements[index - 1].style.color = '';
+
+                }
+                else if (index == 0 && elements.length > 0){
+                    elements[elements.length -1].style.color = '';
+                }
+                elements[index].style.color = 'red';
+                index = (index+1) % elements.length;
+
+            }
+            const highlightinterval = setInterval(highlight, 1000);
+            
+
+            
+        </script>
+    </body>
+</html>
