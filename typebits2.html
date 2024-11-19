@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typebits Method 2</title>
+    <style>
+        .editable {
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 10px;
+        }
+        #submit, #copy, #clear {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="editable" contenteditable="true" id="ininput">
+        click here
+    </div>
+    <br>
+    <button onclick="convert()" id="submit">Submit</button>
+    <button id="copy" onclick="copyit()">Copy</button>
+    <button id="clear" onclick="clearFields()">Clear</button>
+    <a href="typebits_decoder.html">
+        <button>
+            decoder
+        </button>
+    </a>
+    <div id="inoutput"></div>
+    
+
+    <script>
+        function copyit() {
+            const originalDiv = document.getElementById('inoutput');
+            const textToCopy = originalDiv.innerText;
+
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('copied');
+                })
+                .catch(err => {
+                    console.error('error ', err);
+                });
+        }
+
+        function convert() {
+            const replacements = {
+                'a': '0-',
+                'b': '1-',
+                'c': '00-',
+                'd': '01-',
+                'e': '11-',
+                'f': '000-',
+                'g': '001-',
+                'h': '010-',
+                'i': '011-',
+                'j': '100-',
+                'k': '101-',
+                'l': '110-',
+                'm': '111-',
+                'n': '0000-',
+                'o': '0001-',
+                'p': '0010-',
+                'q': '0011-',
+                'r': '0100-',
+                's': '0101-',
+                't': '0110-',
+                'u': '0111-',
+                'v': '1000-',
+                'w': '1001-',
+                'x': '1010-',
+                'y': '1011-',
+                'z': '1100-',
+            };
+            
+            const inputElement = document.getElementById('ininput');
+            const outputElement = document.getElementById('inoutput');
+            const inputText = inputElement.innerText.toLowerCase();
+            let outputText = '';
+
+            for (let char of inputText) {
+                if (replacements[char]) {
+                    outputText += replacements[char];
+                } else {
+                    outputText += char; // Houd niet-gematchte tekens intact
+                }
+            }
+
+            outputElement.innerText = outputText; // Zet de output na de loop
+        }
+
+        function clearFields() {
+            const inputElement = document.getElementById('ininput');
+            const outputElement = document.getElementById('inoutput');
+            inputElement.innerText = ''; // Maak de invoer leeg
+            outputElement.innerText = ''; // Maak de uitvoer leeg
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Number Guess</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.5;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Guessing Game</h1>
+    <div id="step1">
+        <label for="age">How old are you? (years): </label>
+        <input type="number" id="age" min="0">
+        <button onclick="step1()">Next</button>
+    </div>
+
+    <div id="step2" class="hidden">
+        <label for="nameLetters">How many letters does your name have? </label>
+        <input type="number" id="nameLetters" min="1">
+        <button onclick="step2()">Next</button>
+    </div>
+
+    <div id="step3" class="hidden">
+        <p>Think of any number between 1 and 10 (inclusive).</p>
+        <button onclick="step3()">I have a number</button>
+    </div>
+
+    <div id="step4" class="hidden">
+        <p id="guess">IS YOUR NUMBER: ...?</p>
+        <label for="userNumber">Tell me what number you thought of: </label>
+        <input type="number" id="userNumber" min="1" max="10">
+        <button onclick="step4()">Submit</button>
+    </div>
+
+    <div id="result" class="hidden">
+        <p>Thanks for playing! Your number has been noted.</p>
+    </div>
+
+    <script>
+        let userData = [];
+        let previousResults = [];
+        let chosenNumber;
+
+        function calculateFurthestNumber(existing, rangeLimit) {
+            let maxDistance = -1;
+            let furthestNumber = null;
+            for (let num = 1; num <= rangeLimit; num++) {
+                if (!existing.includes(num)) {
+                    let distance = Math.min(...existing.map(x => Math.abs(num - x)));
+                    if (distance > maxDistance) {
+                        maxDistance = distance;
+                        furthestNumber = num;
+                    }
+                }
+            }
+            return furthestNumber;
+        }
+
+        function findClosestCombined(xxNumber, previousNumbers) {
+            let closestNumber = null;
+            let closestDistance = Infinity;
+            for (let num = 1; num <= 10; num++) {
+                if (!previousNumbers.includes(num)) {
+                    let avgDistance = previousNumbers.reduce((sum, x) => sum + Math.abs(num - x), 0) / previousNumbers.length;
+                    let totalDistance = Math.abs(num - xxNumber) + avgDistance;
+                    if (totalDistance < closestDistance) {
+                        closestDistance = totalDistance;
+                        closestNumber = num;
+                    }
+                }
+            }
+            return closestNumber;
+        }
+
+        function step1() {
+            const age = parseInt(document.getElementById("age").value);
+            if (!isNaN(age) && age >= 0) {
+                userData.push(age);
+                document.getElementById("step1").classList.add("hidden");
+                document.getElementById("step2").classList.remove("hidden");
+            }
+        }
+
+        function step2() {
+            const nameLetters = parseInt(document.getElementById("nameLetters").value);
+            if (!isNaN(nameLetters) && nameLetters > 0) {
+                userData.push(nameLetters);
+                document.getElementById("step2").classList.add("hidden");
+                document.getElementById("step3").classList.remove("hidden");
+            }
+        }
+
+        function step3() {
+            const allNumbers = [...userData, 1, 10];
+            const xxNumber = calculateFurthestNumber(allNumbers, 10);
+            if (previousResults.length > 0) {
+                chosenNumber = findClosestCombined(xxNumber, previousResults);
+            } else {
+                chosenNumber = xxNumber;
+            }
+            document.getElementById("guess").textContent = `IS YOUR NUMBER: ${chosenNumber}?`;
+            document.getElementById("step3").classList.add("hidden");
+            document.getElementById("step4").classList.remove("hidden");
+        }
+
+        function step4() {
+            const userNumber = parseInt(document.getElementById("userNumber").value);
+            if (!isNaN(userNumber) && userNumber >= 1 && userNumber <= 10) {
+                previousResults.push(userNumber);
+                document.getElementById("step4").classList.add("hidden");
+                document.getElementById("result").classList.remove("hidden");
+            }
+        }
+    </script>
+</body>
+</html>
