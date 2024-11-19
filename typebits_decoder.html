@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>typebits decoder</title>
+    <title>Typebits Decoder</title>
     <script>
         function decodeText() {
             const decoderTextVal = {
@@ -44,11 +44,7 @@
                 for (let codedChar of codedCharacters) {
                     if (codedChar) {
                         codedChar += '-';
-                        if (decoderTextVal[codedChar]) {
-                            decodedText += decoderTextVal[codedChar];
-                        } else {
-                            decodedText += '?';
-                        }
+                        decodedText += decoderTextVal[codedChar] || '?';
                     }
                 }
                 decodedText += ' ';
@@ -60,9 +56,12 @@
 </head>
 <body>
     <h1>Decoder</h1>
-    <label for="inputText">you: </label><br>
-    <input type="text" id="inputText"><br><br>
-    <button onclick="decodeText()">decode</button>
-    <h2 id="outputText"></h2>
+    <form>
+        <label for="inputText">you : </label><br>
+        <input value="#" type="text" id="inputText"><br><br>
+        <button type="button" onclick="decodeText()">decode</button>
+        <h2 id="outputText"></h2>
+        <button type="reset">clear</button>
+    </form>
 </body>
 </html>
