@@ -23,6 +23,10 @@
         let score = parseInt(sessionStorage.getItem('score')) || 0;
         let bank = parseInt(localStorage.getItem('bank')) || 0;
 
+        if (bank == null) {
+            localStorage.setItem('bank', 10);
+        }
+
         // Update the UI
         function updateUI() {
             document.getElementById('result').innerText = `Level: ${level}, Score: ${score}, Bank: ${bank}`;
