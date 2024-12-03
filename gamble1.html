@@ -20,11 +20,17 @@
     <script>
         // Initialize values
         let level = parseInt(sessionStorage.getItem('level'));
-        let score = parseInt(sessionStorage.getItem('score')) || 0;
-        let bank = parseInt(localStorage.getItem('bank')) || 0;
+        let score = parseInt(sessionStorage.getItem('score'));
+        let bank = parseInt(localStorage.getItem('bank'));
 
         if (bank == null) {
             localStorage.setItem('bank', 10);
+        }
+        if (level == null) {
+            sessionStorage.setItem('level',)
+        }
+        if (score == null) {
+            sessionStorage.setItem('score', 0);
         }
 
         // Update the UI
