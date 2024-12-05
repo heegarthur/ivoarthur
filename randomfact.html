@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <head>
+        <title>
+            spitting facts
+        </title>
+    </head>
+    <body>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                margin-top: 20px;
+                cursor: pointer;
+            }
+            #facts-display {
+                margin-top: 30px;
+                font-size: 24px;
+                font-style: italic;
+                font-weight: bold;
+            }
+        </style>
+
+        <h1>Random facts Generator</h1>
+        <button onclick="generatefacts()">Genereer facts</button>
+        <div id="facts-display"></div>
+
+        <script>
+            function generatefacts() {
+                const facts = [
+                    "bro I'm just to lazy to type facts"//TODO:facts making
+                ];
+                const randomfacts = facts[Math.floor(Math.random() * facts.length)];
+                document.getElementById("facts-display").innerText = randomfacts;
+            }
+        </script>
+    </body>
+</html>
