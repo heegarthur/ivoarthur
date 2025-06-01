@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Capsule</title>
+  <style>
+    textarea {
+      width: 100%;
+      min-height: 40px;
+      max-width: 600px;
+      padding: 8px;
+      font-size: 16px;
+      line-height: 1.5;
+      resize: none;
+      overflow: hidden;
+      box-sizing: border-box;
+      display: block;
+      font-style: italic;
+    }
+    #messages_show {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      max-width: 600px;
+    }
+    .message {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-left: 4px solid #007BFF;
+      background: white;
+    }
+    .message-date {
+      font-weight: bold;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <div>Send a message to yourself in the future</div>
+  <div>Select date to show the message</div>
+  <br><input type="date" aria-label="date future" id="laterig"><br>
+  <h2>Your message for later</h2>
+  <textarea id="autogrow" placeholder="Write your message here"></textarea>
+  <br><button type="button" title="future message" onclick="submit_message()">Submit</button>
+
+  <div id="messages_show"></div>
+
+  <script>
+    function submit_message() {
+      let submitreally = confirm("Submit!?");
+      if (!submitreally) return;
+
+      const date_later = document.getElementById("laterig").value;
+      const message_for_later = document.getElementById("autogrow").value;
+
+      if (date_later && message_for_later.trim()) {
+        localStorage.setItem(date_later, message_for_later);
+        alert("Message saved!");
+        document.getElementById("autogrow").value = "";
+        showMessagesTillToday(); // refresh messages
+      } else {
+        alert("Please select a date and enter a message.");
+      }
+    }
+
+    const textarea = document.getElementById('autogrow');
+    const autoResize = () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    };
+    textarea.addEventListener('input', autoResize);
+    window.addEventListener('load', autoResize);
+
+    function showMessagesTillToday() {
+      const today = new Date().toISOString().split('T')[0];
+      const messageContainer = document.getElementById("messages_show");
+      messageContainer.innerHTML = "<h3>Messages up to today:</h3>";
+
+      let found = false;
+      const keys = Object.keys(localStorage).sort(); // sort dates chronologically
+
+      for (let key of keys) {
+        if (key <= today) {
+          const msg = localStorage.getItem(key);
+          const messageHTML = `
+            <div class="message">
+              <div class="message-date">${key}</div>
+              <div class="message-text">${msg}</div>
+            </div>
+          `;
+          messageContainer.innerHTML += messageHTML;
+          found = true;
+        }
+      }
+
+      if (!found) {
+        messageContainer.innerHTML += "<p>No messages yet for today or earlier.</p>";
+      }
+    }
+
+    window.addEventListener('load', showMessagesTillToday);
+  </script>
+  <style>
+    input[type="date"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: #fff;
+        border: 2px solid #007BFF;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 16px;
+        font-family: inherit;
+        color: #333;
+        outline: none;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        max-width: 300px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    input[type="date"]:focus {
+        border-color: #0056b3;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.5);
+        cursor: pointer;
+    }
+  </style>
+</body>
+</html>

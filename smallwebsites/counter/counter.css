@@ -1,0 +1,18 @@
+.buttons{
+    border-radius: 10px;
+    border: 10%;
+    transform: scale(5);
+
+    
+}
+.buttons:hover{
+    transform: scale(5.1);
+    
+}
+body{
+    text-align: center;
+    margin: auto;
+    width: 50%;
+
+    
+}
