@@ -21,3 +21,10 @@ function mincounter() {
     sessionStorage.setItem("count", count);
     document.getElementById("count").innerText = count;
 }
+document.addEventListener("keydown", function(event){
+    if(event.key === "ArrowUp"){
+        pluscounter();
+    } else if(event.key === "ArrowDown"){
+        mincounter();
+    }
+});
