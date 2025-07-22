@@ -10,85 +10,33 @@
 </head>
 
 <body>
-    <div class="maincon">
-        <button type="button" title="buy me a coffee"><a href="https://buymeacoffee.com/ivocreator">buy me a coffee</a></button>
+    <br>
+    <div class="maincon"><br>
+        <button class="button-s" type="button" title="buy me a coffee(thea)">
+            <a id="link-buy" href="https://buymeacoffee.com/ivocreator">
+                Support me
+            </a>
+            
+            <svg height="32" width="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H24V24H0z" fill="none"></path><path d="M16.5 3C19.538 3 22 5.5 22 9c0 7-7.5 11-10 12.5C9.5 20 2 16 2 9c0-3.5 2.5-6 5.5-6C9.36 3 11 4 12 5c1-1 2.64-2 4.5-2z"></path></svg>
+        </button>
+
         <h1>Random Timer</h1>
-        <div>Enter the maximum time (in minutes):</div>
-        <input aria-label="maximum time" class="input-number" type="number" id="time_max" step="1"><br><br>
+        <div>Enter the maximum time (in minutes):</div><br>
+        <input aria-label="maximum time" type="number" placeholder="enter maximum time" id="time_max" step="1" class="input"><br><br>
+        <div>Enter the minimum time (in minutes):</div><br>
+        <input aria-label="maximum time" type="number" placeholder="enter minimum time" id="time_min" step="1" class="input"><br><br>
+        <button class="btn" type="button" onclick="startTimer()">Start</button>
+        <button class="btn" type="button" onclick="stopTimer()">stop</button>
+        <button class="btn" type="button" onclick="resetTimer()">reset</button>
 
-        <div>Enter the minimum time (in minutes):</div>
-        <input aria-label="minimum time" class="input-number" type="number" id="time_min" step="1"><br><br>
-
-        <button type="button" onclick="startTimer()">Start</button>
-        <button type="button" onclick="stopTimer()">Stop</button>
-        <button type="button" onclick="resetTimer()">Reset</button><br><br>
-
+        <br><br>
+        
         <div id="timer_show">00:00</div>
 
     </div>
+    <script src="index.js"></script>
+    
 
-    <script>
-        let interval = null;
-        let startTime = null;
-        let endTime = null;
-        let isRunning = false;
-        let alarmSound = document.getElementById("alarm_sound");
-
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const secs = (seconds % 60).toString().padStart(2, '0');
-            return `${mins}:${secs}`;
-        }
-
-        function startTimer() {
-            if (isRunning) return;
-
-            const max = parseInt(document.getElementById("time_max").value);
-            const min = parseInt(document.getElementById("time_min").value);
-
-            if (isNaN(max) || isNaN(min) || max <= min) {
-                alert("Please enter valid min and max values (max > min).");
-                return;
-            }
-
-            const maxSec = max * 60;
-            const minSec = min * 60;
-            const randomTime = Math.floor(Math.random() * (maxSec - minSec + 1)) + minSec;
-
-            startTime = Date.now();
-            endTime = startTime + randomTime * 1000;
-            isRunning = true;
-
-            interval = setInterval(() => {
-                const currentTime = Date.now();
-                const timePassed = Math.floor((currentTime - startTime) / 1000);
-                const timeLeft = Math.max(0, Math.floor((endTime - currentTime) / 1000));
-
-                document.getElementById("timer_show").textContent = formatTime(timePassed);
-
-                if (currentTime >= endTime) {
-                    clearInterval(interval);
-                    isRunning = false;
-                    alarmSound.play();
-                    alert("Time's up!");
-                    alarmSound.pause();
-                    alarmSound.currentTime = 0;
-                }
-            }, 500);
-        }
-
-        function stopTimer() {
-            if (interval) {
-                clearInterval(interval);
-                isRunning = false;
-            }
-        }
-
-        function resetTimer() {
-            stopTimer();
-            document.getElementById("timer_show").textContent = "00:00";
-        }
-    </script>
 </body>
 
 </html>
