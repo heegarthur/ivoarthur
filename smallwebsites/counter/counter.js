@@ -28,3 +28,14 @@ document.addEventListener("keydown", function(event){
         mincounter();
     }
 });
+const buttons = document.getElementsByClassName("buttons");
+
+for (let button of buttons) {
+  button.addEventListener("click", () => {
+    button.classList.add("clicked");
+
+    setTimeout(() => {
+      button.classList.remove("clicked");
+    }, 200);
+  });
+}
