@@ -27,7 +27,8 @@ function startTimer() {
 
     startTime = Date.now();
     endTime = startTime + randomTime * 1000;
-    isRunning = true;
+    
+    console.log(`${Math.floor(randomTime/3600)}h ${Math.floor(randomTime%3600/60)}m ${randomTime%60}s`);
 
     interval = setInterval(() => {
         const currentTime = Date.now();
